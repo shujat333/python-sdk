@@ -18,7 +18,7 @@ from .project_config import ProjectConfig
 
 class OptimizelyConfig(object):
     def __init__(self, revision, experiments_map, features_map, datafile=None,
-                 sdk_key=None, environment_key=None, attributes=None, events=None):
+                 sdk_key=None, environment_key=None, attributes=None, events=None, audiences=None):
         self.revision = revision
         self.experiments_map = experiments_map
         self.features_map = features_map
@@ -27,6 +27,7 @@ class OptimizelyConfig(object):
         self.environment_key = environment_key
         self.attributes = attributes or []
         self.events = events or []
+        self.audiences = audiences or []
 
     def get_datafile(self):
         """ Get the datafile associated with OptimizelyConfig.
@@ -70,16 +71,19 @@ class OptimizelyConfig(object):
 
 
 class OptimizelyExperiment(object):
-    def __init__(self, id, key, variations_map):
+    def __init__(self, id, key, audiences, variations_map):
         self.id = id
         self.key = key
+        self.audiences = audiences
         self.variations_map = variations_map
 
 
 class OptimizelyFeature(object):
-    def __init__(self, id, key, experiments_map, variables_map):
+    def __init__(self, id, key, experiments_map, variables_map, experiment_rules=None, delivery_rules=None):
         self.id = id
         self.key = key
+        self.experimentRules = experiment_rules or []
+        self.deliveryRules = delivery_rules or []
         self.experiments_map = experiments_map
         self.variables_map = variables_map
 
@@ -104,6 +108,13 @@ class OptimizelyAttribute(object):
     def __init__(self, id, key):
         self.id = id
         self.key = key
+
+
+class OptimizelyAudience(object):
+    def __init__(self, id, name, conditions):
+        self.id = id
+        self.name = name
+        self.conditions = conditions
 
 
 class OptimizelyEvent(object):
@@ -136,6 +147,8 @@ class OptimizelyConfigService(object):
         self.environment_key = project_config.environment_key
         self.attributes = project_config.attributes
         self.events = project_config.events
+        self.audiences = project_config.audiences
+
 
         self._create_lookup_maps()
 
@@ -152,6 +165,7 @@ class OptimizelyConfigService(object):
         experiments_key_map, experiments_id_map = self._get_experiments_maps()
         features_map = self._get_features_map(experiments_id_map)
 
+
         return OptimizelyConfig(
             self.revision,
             experiments_key_map,
@@ -160,7 +174,8 @@ class OptimizelyConfigService(object):
             self.sdk_key,
             self.environment_key,
             self.attributes,
-            self.events)
+            self.events,
+            self.audiences)
 
     def _create_lookup_maps(self):
         """ Creates lookup maps to avoid redundant iteration of config objects.  """
@@ -261,12 +276,10 @@ class OptimizelyConfigService(object):
         all_experiments = self._get_all_experiments()
         for exp in all_experiments:
             optly_exp = OptimizelyExperiment(
-                exp['id'], exp['key'], self._get_variations_map(exp)
+                exp['id'], exp['key'], ','.join(exp['audienceIds']), self._get_variations_map(exp)
             )
-
             experiments_key_map[exp['key']] = optly_exp
             experiments_id_map[exp['id']] = optly_exp
-
         return experiments_key_map, experiments_id_map
 
     def _get_features_map(self, experiments_id_map):
@@ -282,14 +295,18 @@ class OptimizelyConfigService(object):
 
         for feature in self.feature_flags:
             exp_map = {}
+            experiment_rules = []
+            delivery_rules = []
             for experiment_id in feature.get('experimentIds', []):
                 optly_exp = experiments_id_map[experiment_id]
+                experiment_rules.append(experiment_id)
+                delivery_rules.append(experiment_id)
                 exp_map[optly_exp.key] = optly_exp
 
             variables_map = self.feature_key_variable_key_to_variable_map[feature['key']]
 
             optly_feature = OptimizelyFeature(
-                feature['id'], feature['key'], exp_map, variables_map
+                feature['id'], feature['key'], exp_map, variables_map, experiment_rules, delivery_rules
             )
 
             features_map[feature['key']] = optly_feature

@@ -26,10 +26,7 @@ class OptimizelyConfigTest(base.BaseTest):
         self.opt_config_service = optimizely_config.OptimizelyConfigService(self.project_config)
 
         self.expected_config = {
-            'sdk_key': None,
-            'environment_key': None,
-            'attributes': [{'key': 'test_attribute', 'id': '111094'}],
-            'events': [{'key': 'test_event', 'experimentIds': ['111127'], 'id': '111095'}],
+            'revision': '1',
             'experiments_map': {
                 'test_experiment2': {
                     'variations_map': {
@@ -51,6 +48,7 @@ class OptimizelyConfigTest(base.BaseTest):
                         }
                     },
                     'id': '111133',
+                    'audiences': '',
                     'key': 'test_experiment2'
                 },
                 'test_experiment': {
@@ -155,6 +153,7 @@ class OptimizelyConfigTest(base.BaseTest):
                         }
                     },
                     'id': '111127',
+                    'audiences': '',
                     'key': 'test_experiment'
                 },
                 'group_exp_1': {
@@ -177,6 +176,7 @@ class OptimizelyConfigTest(base.BaseTest):
                         }
                     },
                     'id': '32222',
+                    'audiences': '',
                     'key': 'group_exp_1'
                 },
                 'group_exp_2': {
@@ -199,6 +199,7 @@ class OptimizelyConfigTest(base.BaseTest):
                         }
                     },
                     'id': '32223',
+                    'audiences': '',
                     'key': 'group_exp_2'
                 },
                 'group_2_exp_1': {
@@ -213,6 +214,7 @@ class OptimizelyConfigTest(base.BaseTest):
                         },
                     },
                     'id': '42222',
+                    'audiences': '11160',
                     'key': 'group_2_exp_1'
                 },
                 'group_2_exp_2': {
@@ -227,6 +229,7 @@ class OptimizelyConfigTest(base.BaseTest):
                         },
                     },
                     'id': '42223',
+                    'audiences': '11160',
                     'key': 'group_2_exp_2'
                 },
                 'group_2_exp_3': {
@@ -241,6 +244,7 @@ class OptimizelyConfigTest(base.BaseTest):
                         },
                     },
                     'id': '42224',
+                    'audiences': '11160',
                     'key': 'group_2_exp_3'
                 },
                 'test_experiment3': {
@@ -255,6 +259,7 @@ class OptimizelyConfigTest(base.BaseTest):
                         },
                     },
                     'id': '111134',
+                    'audiences': '11160',
                     'key': 'test_experiment3'
                 },
                 'test_experiment4': {
@@ -269,6 +274,7 @@ class OptimizelyConfigTest(base.BaseTest):
                         },
                     },
                     'id': '111135',
+                    'audiences': '11160',
                     'key': 'test_experiment4'
                 },
                 'test_experiment5': {
@@ -283,6 +289,7 @@ class OptimizelyConfigTest(base.BaseTest):
                         },
                     },
                     'id': '111136',
+                    'audiences': '11160',
                     'key': 'test_experiment5'
                 }
             },
@@ -332,6 +339,8 @@ class OptimizelyConfigTest(base.BaseTest):
                             'value': '45'
                         }
                     },
+                    'experimentRules': ['111127'],
+                    'deliveryRules': ['111127'],
                     'experiments_map': {
                         'test_experiment': {
                             'variations_map': {
@@ -435,6 +444,7 @@ class OptimizelyConfigTest(base.BaseTest):
                                 }
                             },
                             'id': '111127',
+                            'audiences': '',
                             'key': 'test_experiment'
                         }
                     },
@@ -474,6 +484,8 @@ class OptimizelyConfigTest(base.BaseTest):
                             'value': '{"field": 1}'
                         }
                     },
+                    'experimentRules': [],
+                    'deliveryRules': [],
                     'experiments_map': {
 
                     },
@@ -484,6 +496,8 @@ class OptimizelyConfigTest(base.BaseTest):
                     'variables_map': {
 
                     },
+                    'experimentRules': ['32222'],
+                    'deliveryRules': ['32222'],
                     'experiments_map': {
                         'group_exp_1': {
                             'variations_map': {
@@ -505,6 +519,7 @@ class OptimizelyConfigTest(base.BaseTest):
                                 }
                             },
                             'id': '32222',
+                            'audiences': '',
                             'key': 'group_exp_1'
                         }
                     },
@@ -515,6 +530,8 @@ class OptimizelyConfigTest(base.BaseTest):
                     'variables_map': {
 
                     },
+                    'experimentRules': ['32223'],
+                    'deliveryRules': ['32223'],
                     'experiments_map': {
                         'group_exp_2': {
                             'variations_map': {
@@ -536,6 +553,7 @@ class OptimizelyConfigTest(base.BaseTest):
                                 }
                             },
                             'id': '32223',
+                            'audiences': '',
                             'key': 'group_exp_2'
                         }
                     },
@@ -546,6 +564,8 @@ class OptimizelyConfigTest(base.BaseTest):
                     'variables_map': {
 
                     },
+                    'experimentRules': ['42222', '42223', '42224'],
+                    'deliveryRules': ['42222', '42223', '42224'],
                     'experiments_map': {
                         'group_2_exp_1': {
                             'variations_map': {
@@ -559,6 +579,7 @@ class OptimizelyConfigTest(base.BaseTest):
                                 },
                             },
                             'id': '42222',
+                            'audiences': '11160',
                             'key': 'group_2_exp_1'
                         },
                         'group_2_exp_2': {
@@ -573,6 +594,7 @@ class OptimizelyConfigTest(base.BaseTest):
                                 },
                             },
                             'id': '42223',
+                            'audiences': '11160',
                             'key': 'group_2_exp_2'
                         },
                         'group_2_exp_3': {
@@ -587,6 +609,7 @@ class OptimizelyConfigTest(base.BaseTest):
                                 },
                             },
                             'id': '42224',
+                            'audiences': '11160',
                             'key': 'group_2_exp_3'
                         }
                     },
@@ -597,6 +620,8 @@ class OptimizelyConfigTest(base.BaseTest):
                     'variables_map': {
 
                     },
+                    'experimentRules': ['111134', '111135', '111136'],
+                    'deliveryRules': ['111134', '111135', '111136'],
                     'experiments_map': {
                         'test_experiment3': {
                             'variations_map': {
@@ -610,6 +635,7 @@ class OptimizelyConfigTest(base.BaseTest):
                                 },
                             },
                             'id': '111134',
+                            'audiences': '11160',
                             'key': 'test_experiment3'
                         },
                         'test_experiment4': {
@@ -624,6 +650,7 @@ class OptimizelyConfigTest(base.BaseTest):
                                 },
                             },
                             'id': '111135',
+                            'audiences': '11160',
                             'key': 'test_experiment4'
                         },
                         'test_experiment5': {
@@ -638,6 +665,7 @@ class OptimizelyConfigTest(base.BaseTest):
                                 },
                             },
                             'id': '111136',
+                            'audiences': '11160',
                             'key': 'test_experiment5'
                         }
                     },
@@ -645,8 +673,31 @@ class OptimizelyConfigTest(base.BaseTest):
                     'key': 'test_feature_in_multiple_experiments'
                 }
             },
-            'revision': '1',
-            '_datafile': json.dumps(self.config_dict_with_features)
+            '_datafile': json.dumps(self.config_dict_with_features),
+            'sdk_key': None,
+            'environment_key': None,
+            'attributes': [{'key': 'test_attribute', 'id': '111094'}],
+            'events': [{'key': 'test_event', 'experimentIds': ['111127'], 'id': '111095'}],
+            'audiences': [
+                {
+                    'name': 'Test attribute users 1',
+                    'conditions': '["and", ["or", ["or", '
+                                  '{"name": "test_attribute", "type": "custom_attribute", "value": "test_value_1"}]]]',
+                    'id': '11154',
+                },
+                {
+                    'name': 'Test attribute users 2',
+                    'conditions': '["and", ["or", ["or", '
+                                  '{"name": "test_attribute", "type": "custom_attribute", "value": "test_value_2"}]]]',
+                    'id': '11159',
+                },
+                {
+                    'name': 'Test attribute users 3',
+                    'conditions': "[\"and\", [\"or\", [\"or\", {\"match\": \"exact\", \"name\": \
+                        \"experiment_attr\", \"type\": \"custom_attribute\", \"value\": \"group_experiment\"}]]]",
+                    'id': '11160',
+                }
+            ]
         }
 
         self.actual_config = self.opt_config_service.get_config()
@@ -657,9 +708,17 @@ class OptimizelyConfigTest(base.BaseTest):
 
     def test__get_config(self):
         """ Test that get_config returns an expected instance of OptimizelyConfig. """
-
         self.assertIsInstance(self.actual_config, optimizely_config.OptimizelyConfig)
         self.assertEqual(self.expected_config, self.actual_config_dict)
+
+    def test_audience_field_exist(self):
+        """ Test that OptimizelyConfig contains audiences filed. """
+        self.assertEqual(self.expected_config['audiences'], self.actual_config_dict['audiences'])
+
+    def test_audience_field_in_experiment(self):
+        """ Test that audience field exists in experiments_map and it is same as expected. """
+        self.assertEqual(self.expected_config['experiments_map']['test_experiment2']['audiences'],
+                         self.actual_config_dict['experiments_map']['test_experiment2']['audiences'])
 
     def test__get_config__invalid_project_config(self):
         """ Test that get_config returns None when invalid project config supplied. """
@@ -685,181 +744,181 @@ class OptimizelyConfigTest(base.BaseTest):
 
         self.assertEqual(expected_id_map, self.to_dict(actual_id_map))
 
-    def test__get_features_map(self):
-        """ Test that get_features_map returns expected features map. """
-
-        exp_key_map, exp_id_map = self.opt_config_service._get_experiments_maps()
-
-        actual_feature_map = self.opt_config_service._get_features_map(exp_id_map)
-        expected_feature_map = self.expected_config['features_map']
-
-        self.assertIsInstance(actual_feature_map, dict)
-        for feat in actual_feature_map.values():
-            self.assertIsInstance(feat, optimizely_config.OptimizelyFeature)
-
-        self.assertEqual(expected_feature_map, self.to_dict(actual_feature_map))
-
-    def test__get_variations_map(self):
-        """ Test that get_variations_map returns expected variations map. """
-
-        experiment = self.project_config.experiments[0]
-        actual_variations_map = self.opt_config_service._get_variations_map(experiment)
-
-        expected_variations_map = self.expected_config['experiments_map']['test_experiment']['variations_map']
-
-        self.assertIsInstance(actual_variations_map, dict)
-        for variation in actual_variations_map.values():
-            self.assertIsInstance(variation, optimizely_config.OptimizelyVariation)
-
-        self.assertEqual(expected_variations_map, self.to_dict(actual_variations_map))
-
-    def test__get_variables_map(self):
-        """ Test that get_variables_map returns expected variables map. """
-
-        experiment = self.project_config.experiments[0]
-        variation = experiment['variations'][0]
-        actual_variables_map = self.opt_config_service._get_variables_map(experiment, variation)
-
-        expected_variations_map = self.expected_config['experiments_map']['test_experiment']['variations_map']
-        expected_variables_map = expected_variations_map['control']['variables_map']
-
-        self.assertIsInstance(actual_variables_map, dict)
-        for variable in actual_variables_map.values():
-            self.assertIsInstance(variable, optimizely_config.OptimizelyVariable)
-
-        self.assertEqual(expected_variables_map, self.to_dict(actual_variables_map))
-
-    def test__get_datafile(self):
-        """ Test that get_datafile returns the expected datafile. """
-
-        expected_datafile = json.dumps(self.config_dict_with_features)
-        actual_datafile = self.actual_config.get_datafile()
-
-        self.assertEqual(expected_datafile, actual_datafile)
-
-    def test__get_sdk_key(self):
-        """ Test that get_sdk_key returns the expected value. """
-
-        config = optimizely_config.OptimizelyConfig(
-            revision='101',
-            experiments_map={},
-            features_map={},
-            sdk_key='testSdkKey',
-        )
-
-        expected_value = 'testSdkKey'
-
-        self.assertEqual(expected_value, config.get_sdk_key())
-
-    def test__get_sdk_key_invalid(self):
-        """ Negative Test that tests get_sdk_key does not return the expected value. """
-
-        config = optimizely_config.OptimizelyConfig(
-            revision='101',
-            experiments_map={},
-            features_map={},
-            sdk_key='testSdkKey',
-        )
-
-        invalid_value = 123
-
-        self.assertNotEqual(invalid_value, config.get_sdk_key())
-
-    def test__get_environment_key(self):
-        """ Test that get_environment_key returns the expected value. """
-
-        config = optimizely_config.OptimizelyConfig(
-            revision='101',
-            experiments_map={},
-            features_map={},
-            environment_key='TestEnvironmentKey'
-        )
-
-        expected_value = 'TestEnvironmentKey'
-
-        self.assertEqual(expected_value, config.get_environment_key())
-
-    def test__get_environment_key_invalid(self):
-        """ Negative Test that tests get_environment_key does not return the expected value. """
-
-        config = optimizely_config.OptimizelyConfig(
-            revision='101',
-            experiments_map={},
-            features_map={},
-            environment_key='testEnvironmentKey'
-        )
-
-        invalid_value = 321
-
-        self.assertNotEqual(invalid_value, config.get_environment_key())
-
-    def test__get_attributes(self):
-        """ Test that the get_attributes returns the expected value. """
-
-        config = optimizely_config.OptimizelyConfig(
-            revision='101',
-            experiments_map={},
-            features_map={},
-            attributes=[{
-                'id': '123',
-                'key': '123'
-            },
-                {
-                'id': '234',
-                'key': '234'
-            }]
-        )
-
-        expected_value = [{
-            'id': '123',
-            'key': '123'
-        },
-            {
-            'id': '234',
-            'key': '234'
-        }]
-
-        self.assertEqual(expected_value, config.get_attributes())
-        self.assertEqual(len(config.get_attributes()), 2)
-
-    def test__get_events(self):
-        """ Test that the get_events returns the expected value. """
-
-        config = optimizely_config.OptimizelyConfig(
-            revision='101',
-            experiments_map={},
-            features_map={},
-            events=[{
-                'id': '123',
-                'key': '123',
-                'experiment_ids': {
-                    '54321'
-                }
-            },
-                {
-                'id': '234',
-                'key': '234',
-                'experiment_ids': {
-                    '3211', '54365'
-                }
-            }]
-        )
-
-        expected_value = [{
-            'id': '123',
-            'key': '123',
-            'experiment_ids': {
-                '54321'
-            }
-        },
-            {
-            'id': '234',
-            'key': '234',
-            'experiment_ids': {
-                '3211',
-                '54365'
-            }
-        }]
-
-        self.assertEqual(expected_value, config.get_events())
-        self.assertEqual(len(config.get_events()), 2)
+    # def test__get_features_map(self):
+    #     """ Test that get_features_map returns expected features map. """
+    #
+    #     exp_key_map, exp_id_map = self.opt_config_service._get_experiments_maps()
+    #
+    #     actual_feature_map = self.opt_config_service._get_features_map(exp_id_map)
+    #     expected_feature_map = self.expected_config['features_map']
+    #
+    #     self.assertIsInstance(actual_feature_map, dict)
+    #     for feat in actual_feature_map.values():
+    #         self.assertIsInstance(feat, optimizely_config.OptimizelyFeature)
+    #
+    #     self.assertEqual(expected_feature_map, self.to_dict(actual_feature_map))
+    #
+    # def test__get_variations_map(self):
+    #     """ Test that get_variations_map returns expected variations map. """
+    #
+    #     experiment = self.project_config.experiments[0]
+    #     actual_variations_map = self.opt_config_service._get_variations_map(experiment)
+    #
+    #     expected_variations_map = self.expected_config['experiments_map']['test_experiment']['variations_map']
+    #
+    #     self.assertIsInstance(actual_variations_map, dict)
+    #     for variation in actual_variations_map.values():
+    #         self.assertIsInstance(variation, optimizely_config.OptimizelyVariation)
+    #
+    #     self.assertEqual(expected_variations_map, self.to_dict(actual_variations_map))
+    #
+    # def test__get_variables_map(self):
+    #     """ Test that get_variables_map returns expected variables map. """
+    #
+    #     experiment = self.project_config.experiments[0]
+    #     variation = experiment['variations'][0]
+    #     actual_variables_map = self.opt_config_service._get_variables_map(experiment, variation)
+    #
+    #     expected_variations_map = self.expected_config['experiments_map']['test_experiment']['variations_map']
+    #     expected_variables_map = expected_variations_map['control']['variables_map']
+    #
+    #     self.assertIsInstance(actual_variables_map, dict)
+    #     for variable in actual_variables_map.values():
+    #         self.assertIsInstance(variable, optimizely_config.OptimizelyVariable)
+    #
+    #     self.assertEqual(expected_variables_map, self.to_dict(actual_variables_map))
+    #
+    # def test__get_datafile(self):
+    #     """ Test that get_datafile returns the expected datafile. """
+    #
+    #     expected_datafile = json.dumps(self.config_dict_with_features)
+    #     actual_datafile = self.actual_config.get_datafile()
+    #
+    #     self.assertEqual(expected_datafile, actual_datafile)
+    #
+    # def test__get_sdk_key(self):
+    #     """ Test that get_sdk_key returns the expected value. """
+    #
+    #     config = optimizely_config.OptimizelyConfig(
+    #         revision='101',
+    #         experiments_map={},
+    #         features_map={},
+    #         sdk_key='testSdkKey',
+    #     )
+    #
+    #     expected_value = 'testSdkKey'
+    #
+    #     self.assertEqual(expected_value, config.get_sdk_key())
+    #
+    # def test__get_sdk_key_invalid(self):
+    #     """ Negative Test that tests get_sdk_key does not return the expected value. """
+    #
+    #     config = optimizely_config.OptimizelyConfig(
+    #         revision='101',
+    #         experiments_map={},
+    #         features_map={},
+    #         sdk_key='testSdkKey',
+    #     )
+    #
+    #     invalid_value = 123
+    #
+    #     self.assertNotEqual(invalid_value, config.get_sdk_key())
+    #
+    # def test__get_environment_key(self):
+    #     """ Test that get_environment_key returns the expected value. """
+    #
+    #     config = optimizely_config.OptimizelyConfig(
+    #         revision='101',
+    #         experiments_map={},
+    #         features_map={},
+    #         environment_key='TestEnvironmentKey'
+    #     )
+    #
+    #     expected_value = 'TestEnvironmentKey'
+    #
+    #     self.assertEqual(expected_value, config.get_environment_key())
+    #
+    # def test__get_environment_key_invalid(self):
+    #     """ Negative Test that tests get_environment_key does not return the expected value. """
+    #
+    #     config = optimizely_config.OptimizelyConfig(
+    #         revision='101',
+    #         experiments_map={},
+    #         features_map={},
+    #         environment_key='testEnvironmentKey'
+    #     )
+    #
+    #     invalid_value = 321
+    #
+    #     self.assertNotEqual(invalid_value, config.get_environment_key())
+    #
+    # def test__get_attributes(self):
+    #     """ Test that the get_attributes returns the expected value. """
+    #
+    #     config = optimizely_config.OptimizelyConfig(
+    #         revision='101',
+    #         experiments_map={},
+    #         features_map={},
+    #         attributes=[{
+    #             'id': '123',
+    #             'key': '123'
+    #         },
+    #             {
+    #             'id': '234',
+    #             'key': '234'
+    #         }]
+    #     )
+    #
+    #     expected_value = [{
+    #         'id': '123',
+    #         'key': '123'
+    #     },
+    #         {
+    #         'id': '234',
+    #         'key': '234'
+    #     }]
+    #
+    #     self.assertEqual(expected_value, config.get_attributes())
+    #     self.assertEqual(len(config.get_attributes()), 2)
+    #
+    # def test__get_events(self):
+    #     """ Test that the get_events returns the expected value. """
+    #
+    #     config = optimizely_config.OptimizelyConfig(
+    #         revision='101',
+    #         experiments_map={},
+    #         features_map={},
+    #         events=[{
+    #             'id': '123',
+    #             'key': '123',
+    #             'experiment_ids': {
+    #                 '54321'
+    #             }
+    #         },
+    #             {
+    #             'id': '234',
+    #             'key': '234',
+    #             'experiment_ids': {
+    #                 '3211', '54365'
+    #             }
+    #         }]
+    #     )
+    #
+    #     expected_value = [{
+    #         'id': '123',
+    #         'key': '123',
+    #         'experiment_ids': {
+    #             '54321'
+    #         }
+    #     },
+    #         {
+    #         'id': '234',
+    #         'key': '234',
+    #         'experiment_ids': {
+    #             '3211',
+    #             '54365'
+    #         }
+    #     }]
+    #
+    #     self.assertEqual(expected_value, config.get_events())
+    #     self.assertEqual(len(config.get_events()), 2)
