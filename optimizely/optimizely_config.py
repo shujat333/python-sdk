@@ -79,7 +79,7 @@ class OptimizelyExperiment(object):
 
 
 class OptimizelyFeature(object):
-    def __init__(self, id, key, experiments_map, variables_map, experiment_rules=None, delivery_rules=None):
+    def __init__(self, id, key, experiments_map, variables_map, experiment_rules, delivery_rules):
         self.id = id
         self.key = key
         self.experimentRules = experiment_rules or []
@@ -150,8 +150,6 @@ class OptimizelyConfigService(object):
         self.audiences = project_config.audiences
         self.audience_id_map = project_config.audience_id_map
         self.roll_out_id_map = project_config.rollout_id_map
-
-
         self._create_lookup_maps()
 
     def get_config(self):
@@ -164,8 +162,8 @@ class OptimizelyConfigService(object):
         if not self.is_valid:
             return None
 
-        experiments_key_map, experiments_id_map = self._get_experiments_maps(self.audience_id_map)
-        features_map = self._get_features_map(experiments_id_map, self.roll_out_id_map)
+        experiments_key_map, experiments_id_map = self._get_experiments_maps()
+        features_map = self._get_features_map(experiments_id_map)
         audiences = self._get_config_audiences(self.audiences)
 
         return OptimizelyConfig(
@@ -180,7 +178,14 @@ class OptimizelyConfigService(object):
             audiences)
 
     def _get_config_audiences(self, all_audiences):
-        """ get the audiences for optimizely config  """
+        """ get delivery rules for optimizelyFeature.
+
+        Args:
+            all_audiences -- audience list
+        Returns:
+            list -- all audiences except the reserved audience id
+        """
+
         audiences = [audience for audience in all_audiences if audience['id'] != "$opt_dummy_audience"]
         return audiences
 
@@ -270,48 +275,60 @@ class OptimizelyConfigService(object):
         return experiments
 
     def _get_experiment_audiences(self, experiment_audience_condition, project_config_audience_id_map):
-        """ Get experiment audience string for optimizelyExperiment."""
+        """ get delivery rules for optimizelyFeature.
+
+        Args:
+            experiment_audience_condition -- audience conditions list of an experiment
+            project_config_audience_id_map -- audience id map for getting audience names
+        Returns:
+            string -- string containing audience conditions map to audience names
+        """
         s_audience = ""
         if experiment_audience_condition:
             cond = ""
             for item in experiment_audience_condition:
-
-                res = None
                 sub_audiences = ""
                 if type(item) == list:
-                    sub_audiences = _get_experiment_audiences(item, project_config_audience_id_map)
+                    sub_audiences = self._get_experiment_audiences(item, project_config_audience_id_map)
                     sub_audiences = "(" + sub_audiences + ")"
                 elif item in ['and', 'or', 'not']:
                     cond = str(item).upper()
                 else:
                     item_str = str(item)
                     if s_audience !="" or cond == 'NOT':
+                        if s_audience:
+                            s_audience = s_audience + " "
+                        else:
+                            s_audience = s_audience
                         if cond:
                             cond = cond
                         else:
                             cond = "OR"
                         try:
-                            s_audience = s_audience + " " + cond + " " + project_config_audience_id_map[item_str].name + " "
+                            s_audience = s_audience + cond + " \"" + project_config_audience_id_map[item_str].name + "\""
                         except:
-                            print(item_str, "==============")
+                            s_audience = s_audience + cond + " \"" + item_str + "\""
                     else:
-                        try :
-                            s_audience = " " + project_config_audience_id_map[item_str].name + " "
+                        try:
+                            s_audience = "\"" + project_config_audience_id_map[item_str].name + "\""
                         except:
-                            print(item_str, "==============")
+                            s_audience = item_str
                 if str(sub_audiences) != "":
                     if s_audience != "" or cond == 'NOT':
+                        if s_audience:
+                            s_audience = s_audience + " "
+                        else:
+                            s_audience = s_audience
                         if cond:
                             cond = cond
                         else:
                             cond = "OR"
-                        s_audience = s_audience + " " + cond + " " + sub_audiences
+                        s_audience = s_audience + cond + " " + sub_audiences
                     else:
                         s_audience = s_audience + sub_audiences
-        print(s_audience)
         return s_audience
 
-    def _get_experiments_maps(self, audience_id_map=None):
+    def _get_experiments_maps(self):
         """ Gets maps for all the experiments in the project config.
 
         Returns:
@@ -326,7 +343,7 @@ class OptimizelyConfigService(object):
         for exp in all_experiments:
             audiences = ""
             if "audienceConditions" in exp.keys():
-                audiences = self._get_experiment_audiences(exp["audienceConditions"], audience_id_map)
+                audiences = self._get_experiment_audiences(exp["audienceConditions"], self.audience_id_map)
             optly_exp = OptimizelyExperiment(
                 exp['id'], exp['key'], audiences, self._get_variations_map(exp)
             )
@@ -334,10 +351,19 @@ class OptimizelyConfigService(object):
             experiments_id_map[exp['id']] = optly_exp
         return experiments_key_map, experiments_id_map
 
-    def _get_delivery_rules(self, rollou_id, roll_out_id_map, optimiziley_experiment_id_map):
-        """ Get delivery rules against a feature"""
+    def _get_delivery_rules(self, rollout_id, roll_out_id_map, audience_id_map):
+        """ get delivery rules for optimizelyFeature.
+
+        Args:
+            rollout_id -- feature rollout id for getting rollout
+            rollout_id_map -- roll out id map to pick rollout experiments for delivery rules
+            audience_id_map -- map for getting audiences of rollout experiment
+        Returns:
+            list -- OptimizelyExperiments as delivery rules
+        """
+
         delivery_rules = []
-        rollout = roll_out_id_map[rollou_id]
+        rollout = roll_out_id_map[rollout_id]
         experiments = rollout.experiments
         for exp in experiments:
             audiences = ""
@@ -349,11 +375,13 @@ class OptimizelyConfigService(object):
             delivery_rules.append(optly_exp)
         return delivery_rules
 
-    def _get_features_map(self, experiments_id_map, rollout_id_map=None):
+    def _get_features_map(self, experiments_id_map):
         """ Gets features map for the project config.
 
         Args:
             experiments_id_map dict -- experiment id to OptimizelyExperiment map
+            rollout_id_map -- roll out id map to pick rollout experiments for delivery rules
+            audience_id_map -- map for getting audiences of rollout experiment
 
         Returns:
             dict -- feaure key to OptimizelyFeature map
@@ -364,10 +392,9 @@ class OptimizelyConfigService(object):
             exp_map = {}
             experiment_rules = []
             delivery_rules = []
-            print(rollout_id_map, "=========================")
             if 'rolloutId' in feature.keys() and  feature['rolloutId'] != "":
                 rollout_id = feature['rolloutId']
-                delivery_rules = self._get_delivery_rules(rollout_id, rollout_id_map, experiments_id_map)
+                delivery_rules = self._get_delivery_rules(rollout_id, self.roll_out_id_map, self.audience_id_map)
             for experiment_id in feature.get('experimentIds', []):
                 optly_exp = experiments_id_map[experiment_id]
                 experiment_rules.append(optly_exp)
