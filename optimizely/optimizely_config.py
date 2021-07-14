@@ -14,6 +14,7 @@
 import copy
 
 from .project_config import ProjectConfig
+import logging
 
 
 class OptimizelyConfig(object):
@@ -23,8 +24,8 @@ class OptimizelyConfig(object):
         self.experiments_map = experiments_map
         self.features_map = features_map
         self._datafile = datafile
-        self.sdk_key = sdk_key
-        self.environment_key = environment_key
+        self.sdk_key = sdk_key or ""
+        self.environment_key = environment_key or ""
         self.attributes = attributes or []
         self.events = events or []
         self.audiences = audiences or []
@@ -121,7 +122,7 @@ class OptimizelyEvent(object):
     def __init__(self, id, key, experiment_ids):
         self.id = id
         self.key = key
-        self.experiment_ids = experiment_ids
+        self.experimentIds = experiment_ids
 
 
 class OptimizelyConfigService(object):
@@ -164,7 +165,9 @@ class OptimizelyConfigService(object):
 
         experiments_key_map, experiments_id_map = self._get_experiments_maps()
         features_map = self._get_features_map(experiments_id_map)
-        audiences = self._get_config_audiences(self.audiences)
+        audiences = self._get_config_audiences()
+        attributes = [OptimizelyAttribute(**attribute) for attribute in self.attributes]
+        events = self._get_config_events()
 
         return OptimizelyConfig(
             self.revision,
@@ -173,21 +176,29 @@ class OptimizelyConfigService(object):
             self._datafile,
             self.sdk_key,
             self.environment_key,
-            self.attributes,
-            self.events,
+            attributes,
+            events,
             audiences)
 
-    def _get_config_audiences(self, all_audiences):
-        """ get delivery rules for optimizelyFeature.
+    def _get_config_audiences(self):
+        """ get audiences for optimizely Config.
 
-        Args:
-            all_audiences -- audience list
         Returns:
-            list -- all audiences except the reserved audience id
+            list -- audience list of OptimizelyAudience
         """
-
-        audiences = [audience for audience in all_audiences if audience['id'] != "$opt_dummy_audience"]
+        audiences = [OptimizelyAudience(audience['id'], audience['name'], audience['conditions']) for audience in
+                     self.audiences
+                     if audience['id'] != "$opt_dummy_audience"]
         return audiences
+
+    def _get_config_events(self):
+        """ get events for optimizely Config.
+
+        Returns:
+            list -- all events as OptimizelyEvent
+        """
+        events = [OptimizelyEvent(event['id'], event['key'], event['experimentIds']) for event in self.events]
+        return events
 
     def _create_lookup_maps(self):
         """ Creates lookup maps to avoid redundant iteration of config objects.  """
@@ -295,7 +306,7 @@ class OptimizelyConfigService(object):
                     cond = str(item).upper()
                 else:
                     item_str = str(item)
-                    if s_audience !="" or cond == 'NOT':
+                    if s_audience != "" or cond == 'NOT':
                         if s_audience:
                             s_audience = s_audience + " "
                         else:
@@ -306,13 +317,16 @@ class OptimizelyConfigService(object):
                             cond = "OR"
                         try:
                             s_audience = s_audience + cond + " \"" + project_config_audience_id_map[item_str].name + "\""
-                        except:
+                        except Exception as ex:
                             s_audience = s_audience + cond + " \"" + item_str + "\""
+                            logging.exception(ex)
                     else:
                         try:
                             s_audience = "\"" + project_config_audience_id_map[item_str].name + "\""
-                        except:
-                            s_audience = item_str
+                        except Exception as ex:
+                            s_audience = "\"" + item_str + "\""
+                            logging.exception(ex)
+
                 if str(sub_audiences) != "":
                     if s_audience != "" or cond == 'NOT':
                         if s_audience:
