@@ -505,7 +505,15 @@ class OptimizelyConfigTest(base.BaseTest):
                         }
                     },
                     'experimentRules': [],
-                    'deliveryRules': [{'id': '211127', 'key': '211127', 'audiences': '', 'variations_map': {'211129': {'id': '211129', 'key': '211129', 'feature_enabled': True, 'variables_map': {}}, '211229': {'id': '211229', 'key': '211229', 'feature_enabled': False, 'variables_map': {}}}}, {'id': '211137', 'key': '211137', 'audiences': '', 'variations_map': {'211139': {'id': '211139', 'key': '211139', 'feature_enabled': True, 'variables_map': {}}}}, {'id': '211147', 'key': '211147', 'audiences': '', 'variations_map': {'211149': {'id': '211149', 'key': '211149', 'feature_enabled': True, 'variables_map': {}}}}],
+                    'deliveryRules': [{'id': '211127', 'key': '211127', 'audiences': '', 'variations_map': {
+                        '211129': {'id': '211129', 'key': '211129', 'feature_enabled': True, 'variables_map': {}},
+                        '211229': {'id': '211229', 'key': '211229', 'feature_enabled': False, 'variables_map': {}}}},
+                                      {'id': '211137', 'key': '211137', 'audiences': '', 'variations_map': {
+                                          '211139': {'id': '211139', 'key': '211139', 'feature_enabled': True,
+                                                     'variables_map': {}}}},
+                                      {'id': '211147', 'key': '211147', 'audiences': '', 'variations_map': {
+                                          '211149': {'id': '211149', 'key': '211149', 'feature_enabled': True,
+                                                     'variables_map': {}}}}],
                     'experiments_map': {
 
                     },
@@ -516,7 +524,11 @@ class OptimizelyConfigTest(base.BaseTest):
                     'variables_map': {
 
                     },
-                    'experimentRules': [{'id': '32222', 'key': 'group_exp_1', 'audiences': '', 'variations_map': {'group_exp_1_control': {'id': '28901', 'key': 'group_exp_1_control', 'feature_enabled': None, 'variables_map': {}}, 'group_exp_1_variation': {'id': '28902', 'key': 'group_exp_1_variation', 'feature_enabled': None, 'variables_map': {}}}}],
+                    'experimentRules': [{'id': '32222', 'key': 'group_exp_1', 'audiences': '', 'variations_map': {
+                        'group_exp_1_control': {'id': '28901', 'key': 'group_exp_1_control', 'feature_enabled': None,
+                                                'variables_map': {}},
+                        'group_exp_1_variation': {'id': '28902', 'key': 'group_exp_1_variation',
+                                                  'feature_enabled': None, 'variables_map': {}}}}],
                     'deliveryRules': [],
                     'experiments_map': {
                         'group_exp_1': {
@@ -550,8 +562,20 @@ class OptimizelyConfigTest(base.BaseTest):
                     'variables_map': {
 
                     },
-                    'experimentRules': [{'id': '32223', 'key': 'group_exp_2', 'audiences': '', 'variations_map': {'group_exp_2_control': {'id': '28905', 'key': 'group_exp_2_control', 'feature_enabled': None, 'variables_map': {}}, 'group_exp_2_variation': {'id': '28906', 'key': 'group_exp_2_variation', 'feature_enabled': None, 'variables_map': {}}}}],
-                    'deliveryRules': [{'id': '211127', 'key': '211127', 'audiences': '', 'variations_map': {'211129': {'id': '211129', 'key': '211129', 'feature_enabled': True, 'variables_map': {}}, '211229': {'id': '211229', 'key': '211229', 'feature_enabled': False, 'variables_map': {}}}}, {'id': '211137', 'key': '211137', 'audiences': '', 'variations_map': {'211139': {'id': '211139', 'key': '211139', 'feature_enabled': True, 'variables_map': {}}}}, {'id': '211147', 'key': '211147', 'audiences': '', 'variations_map': {'211149': {'id': '211149', 'key': '211149', 'feature_enabled': True, 'variables_map': {}}}}],
+                    'experimentRules': [{'id': '32223', 'key': 'group_exp_2', 'audiences': '', 'variations_map': {
+                        'group_exp_2_control': {'id': '28905', 'key': 'group_exp_2_control', 'feature_enabled': None,
+                                                'variables_map': {}},
+                        'group_exp_2_variation': {'id': '28906', 'key': 'group_exp_2_variation',
+                                                  'feature_enabled': None, 'variables_map': {}}}}],
+                    'deliveryRules': [{'id': '211127', 'key': '211127', 'audiences': '', 'variations_map': {
+                        '211129': {'id': '211129', 'key': '211129', 'feature_enabled': True, 'variables_map': {}},
+                        '211229': {'id': '211229', 'key': '211229', 'feature_enabled': False, 'variables_map': {}}}},
+                                      {'id': '211137', 'key': '211137', 'audiences': '', 'variations_map': {
+                                          '211139': {'id': '211139', 'key': '211139', 'feature_enabled': True,
+                                                     'variables_map': {}}}},
+                                      {'id': '211147', 'key': '211147', 'audiences': '', 'variations_map': {
+                                          '211149': {'id': '211149', 'key': '211149', 'feature_enabled': True,
+                                                     'variables_map': {}}}}],
                     'experiments_map': {
                         'group_exp_2': {
                             'variations_map': {
@@ -584,8 +608,25 @@ class OptimizelyConfigTest(base.BaseTest):
                     'variables_map': {
 
                     },
-                    'experimentRules': [{'id': '42222', 'key': 'group_2_exp_1', 'audiences': '\"Test attribute users 3\"', 'variations_map': {'var_1': {'id': '38901', 'key': 'var_1', 'feature_enabled': None, 'variables_map': {}}}}, {'id': '42223', 'key': 'group_2_exp_2', 'audiences': '\"Test attribute users 3\"', 'variations_map': {'var_1': {'id': '38905', 'key': 'var_1', 'feature_enabled': None, 'variables_map': {}}}}, {'id': '42224', 'key': 'group_2_exp_3', 'audiences': '\"Test attribute users 3\"', 'variations_map': {'var_1': {'id': '38906', 'key': 'var_1', 'feature_enabled': None, 'variables_map': {}}}}],
-                    'deliveryRules': [{'id': '211127', 'key': '211127', 'audiences': '', 'variations_map': {'211129': {'id': '211129', 'key': '211129', 'feature_enabled': True, 'variables_map': {}}, '211229': {'id': '211229', 'key': '211229', 'feature_enabled': False, 'variables_map': {}}}}, {'id': '211137', 'key': '211137', 'audiences': '', 'variations_map': {'211139': {'id': '211139', 'key': '211139', 'feature_enabled': True, 'variables_map': {}}}}, {'id': '211147', 'key': '211147', 'audiences': '', 'variations_map': {'211149': {'id': '211149', 'key': '211149', 'feature_enabled': True, 'variables_map': {}}}}],
+                    'experimentRules': [
+                        {'id': '42222', 'key': 'group_2_exp_1', 'audiences': '\"Test attribute users 3\"',
+                         'variations_map': {
+                             'var_1': {'id': '38901', 'key': 'var_1', 'feature_enabled': None, 'variables_map': {}}}},
+                        {'id': '42223', 'key': 'group_2_exp_2', 'audiences': '\"Test attribute users 3\"',
+                         'variations_map': {
+                             'var_1': {'id': '38905', 'key': 'var_1', 'feature_enabled': None, 'variables_map': {}}}},
+                        {'id': '42224', 'key': 'group_2_exp_3', 'audiences': '\"Test attribute users 3\"',
+                         'variations_map': {
+                             'var_1': {'id': '38906', 'key': 'var_1', 'feature_enabled': None, 'variables_map': {}}}}],
+                    'deliveryRules': [{'id': '211127', 'key': '211127', 'audiences': '', 'variations_map': {
+                        '211129': {'id': '211129', 'key': '211129', 'feature_enabled': True, 'variables_map': {}},
+                        '211229': {'id': '211229', 'key': '211229', 'feature_enabled': False, 'variables_map': {}}}},
+                                      {'id': '211137', 'key': '211137', 'audiences': '', 'variations_map': {
+                                          '211139': {'id': '211139', 'key': '211139', 'feature_enabled': True,
+                                                     'variables_map': {}}}},
+                                      {'id': '211147', 'key': '211147', 'audiences': '', 'variations_map': {
+                                          '211149': {'id': '211149', 'key': '211149', 'feature_enabled': True,
+                                                     'variables_map': {}}}}],
                     'experiments_map': {
                         'group_2_exp_1': {
                             'variations_map': {
@@ -640,8 +681,25 @@ class OptimizelyConfigTest(base.BaseTest):
                     'variables_map': {
 
                     },
-                    'experimentRules': [{'id': '111134', 'key': 'test_experiment3', 'audiences': '\"Test attribute users 3\"', 'variations_map': {'control': {'id': '222239', 'key': 'control', 'feature_enabled': None, 'variables_map': {}}}}, {'id': '111135', 'key': 'test_experiment4', 'audiences': '\"Test attribute users 3\"', 'variations_map': {'control': {'id': '222240', 'key': 'control', 'feature_enabled': None, 'variables_map': {}}}}, {'id': '111136', 'key': 'test_experiment5', 'audiences': '\"Test attribute users 3\"', 'variations_map': {'control': {'id': '222241', 'key': 'control', 'feature_enabled': None, 'variables_map': {}}}}],
-                    'deliveryRules': [{'id': '211127', 'key': '211127', 'audiences': '', 'variations_map': {'211129': {'id': '211129', 'key': '211129', 'feature_enabled': True, 'variables_map': {}}, '211229': {'id': '211229', 'key': '211229', 'feature_enabled': False, 'variables_map': {}}}}, {'id': '211137', 'key': '211137', 'audiences': '', 'variations_map': {'211139': {'id': '211139', 'key': '211139', 'feature_enabled': True, 'variables_map': {}}}}, {'id': '211147', 'key': '211147', 'audiences': '', 'variations_map': {'211149': {'id': '211149', 'key': '211149', 'feature_enabled': True, 'variables_map': {}}}}],
+                    'experimentRules': [
+                        {'id': '111134', 'key': 'test_experiment3', 'audiences': '\"Test attribute users 3\"',
+                         'variations_map': {'control': {'id': '222239', 'key': 'control', 'feature_enabled': None,
+                                                        'variables_map': {}}}},
+                        {'id': '111135', 'key': 'test_experiment4', 'audiences': '\"Test attribute users 3\"',
+                         'variations_map': {'control': {'id': '222240', 'key': 'control', 'feature_enabled': None,
+                                                        'variables_map': {}}}},
+                        {'id': '111136', 'key': 'test_experiment5', 'audiences': '\"Test attribute users 3\"',
+                         'variations_map': {'control': {'id': '222241', 'key': 'control', 'feature_enabled': None,
+                                                        'variables_map': {}}}}],
+                    'deliveryRules': [{'id': '211127', 'key': '211127', 'audiences': '', 'variations_map': {
+                        '211129': {'id': '211129', 'key': '211129', 'feature_enabled': True, 'variables_map': {}},
+                        '211229': {'id': '211229', 'key': '211229', 'feature_enabled': False, 'variables_map': {}}}},
+                                      {'id': '211137', 'key': '211137', 'audiences': '', 'variations_map': {
+                                          '211139': {'id': '211139', 'key': '211139', 'feature_enabled': True,
+                                                     'variables_map': {}}}},
+                                      {'id': '211147', 'key': '211147', 'audiences': '', 'variations_map': {
+                                          '211149': {'id': '211149', 'key': '211149', 'feature_enabled': True,
+                                                     'variables_map': {}}}}],
                     'experiments_map': {
                         'test_experiment3': {
                             'variations_map': {
@@ -699,6 +757,12 @@ class OptimizelyConfigTest(base.BaseTest):
             'attributes': [{'key': 'test_attribute', 'id': '111094'}],
             'events': [{'key': 'test_event', 'experimentIds': ['111127'], 'id': '111095'}],
             'audiences': [
+                {'id': '3988293898', 'name': 'substringString',
+                 'conditions': '["and", '
+                               '["or", '
+                               '["or", '
+                               '{"name": '
+                               '"house", "type": "custom_attribute", "match": "substring", "value": "Slytherin"}]]]'},
                 {
                     'name': 'Test attribute users 1',
                     'conditions': '["and", ["or", ["or", '
@@ -716,7 +780,8 @@ class OptimizelyConfigTest(base.BaseTest):
                     'conditions': "[\"and\", [\"or\", [\"or\", {\"match\": \"exact\", \"name\": \
                         \"experiment_attr\", \"type\": \"custom_attribute\", \"value\": \"group_experiment\"}]]]",
                     'id': '11160',
-                }
+                },
+
             ]
         }
 

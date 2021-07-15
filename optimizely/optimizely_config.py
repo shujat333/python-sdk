@@ -24,8 +24,8 @@ class OptimizelyConfig(object):
         self.experiments_map = experiments_map
         self.features_map = features_map
         self._datafile = datafile
-        self.sdk_key = sdk_key or ""
-        self.environment_key = environment_key or ""
+        self.sdk_key = sdk_key or ''
+        self.environment_key = environment_key or ''
         self.attributes = attributes or []
         self.events = events or []
         self.audiences = audiences or []
@@ -72,7 +72,7 @@ class OptimizelyConfig(object):
 
 
 class OptimizelyExperiment(object):
-    def __init__(self, id, key, audiences, variations_map):
+    def __init__(self, id, key, variations_map, audiences):
         self.id = id
         self.key = key
         self.audiences = audiences
@@ -151,6 +151,7 @@ class OptimizelyConfigService(object):
         self.audiences = project_config.audiences
         self.audience_id_map = project_config.audience_id_map
         self.roll_out_id_map = project_config.rollout_id_map
+        self.typed_audiences = project_config.typed_audiences
         self._create_lookup_maps()
 
     def get_config(self):
@@ -181,21 +182,26 @@ class OptimizelyConfigService(object):
             audiences)
 
     def _get_config_audiences(self):
-        """ get audiences for optimizely Config.
+        """ get audiences for optimizelyConfig object.
 
         Returns:
-            list -- audience list of OptimizelyAudience
+            list -- audiences list of unique typed audiences and audiences
         """
+        global_audiences = [audience for audience in self.typed_audiences if audience['id']]
+
+        filtered_audience = [audience for audience in self.audiences if
+                             audience['id'] not in [t_audience['id'] for t_audience in global_audiences]]
+
+        global_audiences = global_audiences + filtered_audience
         audiences = [OptimizelyAudience(audience['id'], audience['name'], audience['conditions']) for audience in
-                     self.audiences
-                     if audience['id'] != "$opt_dummy_audience"]
+                     global_audiences if audience['id'] != '$opt_dummy_audience']
         return audiences
 
     def _get_config_events(self):
-        """ get events for optimizely Config.
+        """ get events for optimizelyConfig object.
 
         Returns:
-            list -- all events as OptimizelyEvent
+            list -- list of all events as OptimizelyEvent
         """
         events = [OptimizelyEvent(event['id'], event['key'], event['experimentIds']) for event in self.events]
         return events
@@ -286,7 +292,7 @@ class OptimizelyConfigService(object):
         return experiments
 
     def _get_experiment_audiences(self, experiment_audience_condition, project_config_audience_id_map):
-        """ get delivery rules for optimizelyFeature.
+        """ get the audience conditions of an experiment  mapped to a string.
 
         Args:
             experiment_audience_condition -- audience conditions list of an experiment
@@ -294,53 +300,59 @@ class OptimizelyConfigService(object):
         Returns:
             string -- string containing audience conditions map to audience names
         """
-        s_audience = ""
-        if experiment_audience_condition:
-            cond = ""
+        result_audience = ""
+        if experiment_audience_condition:  # checking if audience condition is not None or empty
+            cond = ""  # initialising a condition string
             for item in experiment_audience_condition:
-                sub_audiences = ""
-                if type(item) == list:
+                sub_audiences = ""  # initialising a string to get result_audience if nested conditions
+                if type(item) == list:  # checking type of item if a list call a recursive call
                     sub_audiences = self._get_experiment_audiences(item, project_config_audience_id_map)
                     sub_audiences = "(" + sub_audiences + ")"
-                elif item in ['and', 'or', 'not']:
+                elif item in ["and", "or", "not"]:  # checking if item is one of the
+                    # conditions to place accordingly
                     cond = str(item).upper()
                 else:
                     item_str = str(item)
-                    if s_audience != "" or cond == 'NOT':
-                        if s_audience:
-                            s_audience = s_audience + " "
+                    if result_audience != "" or cond == "NOT":  # checking that result
+                        # audience is not empty to place not condition at start
+                        if result_audience:  # in case result_audience is not
+                            # empty append an empty space to match format
+                            result_audience = result_audience + " "
                         else:
-                            s_audience = s_audience
-                        if cond:
+                            result_audience = result_audience
+                        if cond:  # checking if condition is not empty to
+                            # handle the case if no condition then place OR between them
                             cond = cond
                         else:
                             cond = "OR"
-                        try:
-                            s_audience = s_audience + cond + " \"" + project_config_audience_id_map[item_str].name + "\""
+                        try:  # if not a name of audience id found in
+                            # audience_id map then using the audience id
+                            result_audience = result_audience + cond + " \"" + project_config_audience_id_map[
+                                item_str].name + "\""
                         except Exception as ex:
-                            s_audience = s_audience + cond + " \"" + item_str + "\""
+                            result_audience = result_audience + cond + " \"" + item_str + "\""
                             logging.exception(ex)
-                    else:
+                    else:  # in case result_audience is not null then place that audience id accordingly
                         try:
-                            s_audience = "\"" + project_config_audience_id_map[item_str].name + "\""
+                            result_audience = "\"" + project_config_audience_id_map[item_str].name + "\""
                         except Exception as ex:
-                            s_audience = "\"" + item_str + "\""
+                            result_audience = "\"" + item_str + "\""
                             logging.exception(ex)
 
-                if str(sub_audiences) != "":
-                    if s_audience != "" or cond == 'NOT':
-                        if s_audience:
-                            s_audience = s_audience + " "
+                if str(sub_audiences) != "":  # to handle the nested result_audience
+                    if result_audience != "" or cond == "NOT":
+                        if result_audience:
+                            result_audience = result_audience + " "
                         else:
-                            s_audience = s_audience
+                            result_audience = result_audience
                         if cond:
                             cond = cond
                         else:
                             cond = "OR"
-                        s_audience = s_audience + cond + " " + sub_audiences
+                        result_audience = result_audience + cond + " " + sub_audiences
                     else:
-                        s_audience = s_audience + sub_audiences
-        return s_audience
+                        result_audience = result_audience + sub_audiences
+        return result_audience
 
     def _get_experiments_maps(self):
         """ Gets maps for all the experiments in the project config.
@@ -355,11 +367,11 @@ class OptimizelyConfigService(object):
 
         all_experiments = self._get_all_experiments()
         for exp in all_experiments:
-            audiences = ""
-            if "audienceConditions" in exp.keys():
-                audiences = self._get_experiment_audiences(exp["audienceConditions"], self.audience_id_map)
+            audiences = ''
+            if 'audienceConditions' in exp.keys():
+                audiences = self._get_experiment_audiences(exp['audienceConditions'], self.audience_id_map)
             optly_exp = OptimizelyExperiment(
-                exp['id'], exp['key'], audiences, self._get_variations_map(exp)
+                exp['id'], exp['key'], self._get_variations_map(exp), audiences
             )
             experiments_key_map[exp['key']] = optly_exp
             experiments_id_map[exp['id']] = optly_exp
@@ -380,11 +392,11 @@ class OptimizelyConfigService(object):
         rollout = roll_out_id_map[rollout_id]
         experiments = rollout.experiments
         for exp in experiments:
-            audiences = ""
-            if "audienceConditions" in exp.keys():
-                audiences = self._get_experiment_audiences(exp["audienceConditions"], audience_id_map)
+            audiences = ''
+            if 'audienceConditions' in exp.keys():
+                audiences = self._get_experiment_audiences(exp['audienceConditions'], audience_id_map)
             optly_exp = OptimizelyExperiment(
-                exp['id'], exp['key'], audiences, self._get_variations_map(exp)
+                exp['id'], exp['key'], self._get_variations_map(exp),  audiences
             )
             delivery_rules.append(optly_exp)
         return delivery_rules
@@ -406,7 +418,7 @@ class OptimizelyConfigService(object):
             exp_map = {}
             experiment_rules = []
             delivery_rules = []
-            if 'rolloutId' in feature.keys() and  feature['rolloutId'] != "":
+            if 'rolloutId' in feature.keys() and  feature['rolloutId'] != '':
                 rollout_id = feature['rolloutId']
                 delivery_rules = self._get_delivery_rules(rollout_id, self.roll_out_id_map, self.audience_id_map)
             for experiment_id in feature.get('experimentIds', []):

@@ -406,6 +406,37 @@ class BaseTest(unittest.TestCase):
                     'id': '11160',
                 }
             ],
+            'typedAudiences': [
+                {
+                    'id': '3988293898',
+                    'name': 'substringString',
+                    'conditions': [
+                        'and',
+                        [
+                            'or',
+                            [
+                                'or',
+                                {
+                                    'name': 'house',
+                                    'type': 'custom_attribute',
+                                    'match': 'substring',
+                                    'value': 'Slytherin',
+                                },
+                            ],
+                        ],
+                    ],
+                },
+                {
+                    'name': 'Test attribute users 1',
+                    'conditions': ['and', ['or', ['or',
+                                                  {"name": "test_attribute", "type": "custom_attribute",
+                                                   "value": "test_value_1"}]]],
+
+                    'id': '11154',
+                },
+
+            ],
+
             'rollouts': [
                 {'id': '201111', 'experiments': []},
                 {
